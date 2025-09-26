@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Loops Example - Student Management</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 600px;
+      margin: auto;
+      padding: 20px;
+      background: linear-gradient(135deg, #dedfc7, #ccdb44);
+      color: #2c3e50;
+    }
+    h1 {
+      text-align: center;
+      color: #34495e;
+      margin-bottom: 20px;
+      text-shadow: 1px 1px 2px #bdc3c7;
+    }
+    pre {
+      background: #ffffffcc;  /* slightly transparent white */
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+      white-space: pre-wrap;
+      font-size: 16px;
+      line-height: 1.6;
+      color: #2c3e50;
+      border-left: 8px solid #5a67d8; /* blue left border for style */
+      margin-bottom: 30px;
+    }
+    /* Highlight different sections */
+    .section-title {
+      font-weight: 700;
+      font-size: 18px;
+      margin-top: 20px;
+      margin-bottom: 8px;
+      color: #5a67d8;
+      text-decoration: underline;
+    }
+    /* Highlight student names */
+    .student-name {
+      font-weight: 600;
+      color: #34495e;
+    }
+    /* Highlight totals and averages */
+    .total-average {
+      color: #27ae60;
+      font-weight: 600;
+    }
+    /* Highlight students scoring above 80 */
+    .high-score {
+      color: #e67e22;
+      font-weight: 600;
+    }
+    /* Highlight below average students */
+    .below-average {
+      color: #c0392b;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Student Marks Summary</h1>
+
+<pre id="output"></pre>
+
+<script>
+  let students = {
+    Sowmiya: [85, 90, 78],
+    Shereen: [70, 65, 80],
+    Divya: [95, 88, 92],
+    Bharathi: [55, 60, 58],
+    Sri: [80, 85, 84]
+  };
+
+  let output = "";
+
+  // Helper function to wrap text in span with class
+  function wrapSpan(text, className) {
+    return `<span class="${className}">${text}</span>`;
+  }
+
+  // 1. for...in loop to iterate over student names (object keys)
+  output += wrapSpan("Student Marks:", "section-title") + "\n";
+  for (let student in students) {  //loop starts..
+    output += `${wrapSpan(student, "student-name")}: ${students[student].join(", ")}\n`;
+  }
+  output += "\n";
+
+  // 2. for loop to calculate total marks for each student
+  output += wrapSpan("Total and Average Marks:", "section-title") + "\n";
+  for (let student in students) {
+    let total = 0;
+    let marks = students[student];
+
+    // 3. while loop to sum marks for each student
+    let i = 0;
+    while (i < marks.length) {
+      total += marks[i];
+      i++;
+    }
+
+    let average = total / marks.length;
+    output += `${wrapSpan(student, "student-name")} - ${wrapSpan("Total: " + total, "total-average")}, ${wrapSpan("Average: " + average.toFixed(2), "total-average")}\n`;
+  }
+  output += "\n";
+
+  // 4. do...while loop to list students who scored above 80 in first exam
+  output += wrapSpan("Students scoring above 80 in first exam:", "section-title") + "\n";
+  let studentNames = Object.keys(students);
+  let index = 0;
+  do {
+    let firstExamMark = students[studentNames[index]][0];
+    if (firstExamMark > 80) {
+      output += wrapSpan(studentNames[index], "high-score") + "\n";
+    }
+    index++;
+  } while (index < studentNames.length);
+  output += "\n";
+
+  // 5. for...of loop to find students with average below 70
+  output += wrapSpan("Students with average below 70:", "section-title") + "\n";
+  for (let student of studentNames) {
+    let marks = students[student];
+    let total = 0;
+    for (let mark of marks) {    
+      total += mark;  //add marks one by one to the total
+    }
+    let average = total / marks.length;
+
+    // 6. if average below 70, list student (if-else with continue)
+    if (average >= 70) {
+      continue; // skip this student
+    }
+    output += wrapSpan(`${student} (Average: ${average.toFixed(2)})`, "below-average") + "\n";
+  }
+  output += "\n";
+
+  // 7. for loop with break: Stop listing students after 2 below-average students found
+  output += wrapSpan("First 2 students below average:", "section-title") + "\n";
+  let count = 0;
+  for (let student of studentNames) {
+    let marks = students[student];
+    let total = 0;
+    for (let mark of marks) total += mark;
+    let average = total / marks.length;
+
+    if (average < 70) {
+      output += wrapSpan(`${student} (Average: ${average.toFixed(2)})`, "below-average") + "\n";
+      count++;
+      if (count === 2) break;  // exit loop after 2 students
+    }
+  }
+
+  // Show output on the webpage
+  // Use innerHTML so our span styles work inside pre
+  document.getElementById("output").innerHTML = output;
+</script>
+
+</body>
+</html>

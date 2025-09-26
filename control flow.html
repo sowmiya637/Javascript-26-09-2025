@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>control flow</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      padding: 30px;
+      background: linear-gradient(to right, #d2c393, #fda085); /* gradient background */
+      max-width: 600px;
+      margin: auto;
+      color: #333;
+    }
+
+    h2 {
+      text-align: center;
+      color: #3b3b3b;
+      margin-bottom: 30px;
+    }
+
+    label {
+      font-weight: bold;
+      margin-top: 10px;
+      display: block;
+    }
+
+    input, select {
+      margin: 8px 0 20px 0;
+      padding: 10px;
+      width: 100%;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      box-sizing: border-box;
+      background-color: #fff;
+    }
+
+    button {
+      background-color: #5a67d8;
+      color: white;
+      padding: 12px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+      width: 100%;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      background-color: #434190;
+    }
+
+    #output {
+      background-color: #fff;
+      padding: 20px 25px;
+      margin-top: 30px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      white-space: pre-line;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    /* Optional: Add responsive styling */
+    @media screen and (max-width: 600px) {
+      body {
+        padding: 15px;
+      }
+
+      button {
+        padding: 10px;
+      }
+
+      #output {
+        padding: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <h2> Online Food Order</h2>
+
+  <label for="dish">Select your dish:</label>
+  <select id="dish">
+    <option value="pizza">Pizza</option>
+    <option value="burger">Burger</option>
+    <option value="pasta">Pasta</option>
+    <option value="biryani">Biryani</option>
+    <option value="icecream">Ice Cream</option>
+  </select>
+
+  <label for="quantity">Quantity:</label>
+  <input type="number" id="quantity" min="1" value="1">
+
+  <button onclick="placeOrder()">Place Order</button>
+
+  <div id="output"></div>
+
+  <script>
+    function placeOrder() {
+      let dish = document.getElementById("dish").value;
+      let quantity = Number(document.getElementById("quantity").value);
+      let price = 0;
+      let available = true; //(boolean value) that says: the dish is available.
+
+      // Step 1: Set price using switch
+      switch (dish) {
+        case "pizza":
+          price = 200;
+          break;
+        case "burger":
+          price = 100;
+          break;
+        case "pasta":
+          price = 150;
+          break;
+        case "biryani":
+          price = 180;
+          break;
+        case "icecream":
+          price = 80;
+          break;
+        default:
+          available = false;
+      }
+
+      // Step 2: Check availability
+      if (!available) {
+        document.getElementById("output").textContent = " Sorry, item not available!";
+        return;
+      }
+
+      // Step 3: Calculate total
+      let total = price * quantity;
+      let discount = 0;   //no discount has been applied yet
+
+      // Step 4: Apply discount using if-else if-else
+      if (total >= 500) {
+        discount = 20;
+      } else if (total >= 300) {
+        discount = 10;
+      } else {
+        discount = 0;
+      }
+
+      let discountAmount = (total * discount) / 100;
+      let finalAmount = total - discountAmount;
+
+      // Step 5: Use ternary to show message
+      let msg = (discount > 0)  //condition is discount > 0
+        ? ` You got a ${discount}% discount!` 
+        : "No discount applied.";
+
+      // using if-else:
+
+        // let msg;
+        // if(discount > 0){
+        //     msg = `You got a ${discount}% discount!`;
+        // }
+        // else{
+        //     msg = "no discount applied";
+        // }
+
+      // Final Output
+       let output = ` Order Summary:  
+      Dish: ${dish.toUpperCase()}
+      Quantity: ${quantity}
+      Price per item: ₹${price}
+
+      Total: ₹${total.toFixed(2)}  
+      Discount: ₹${discountAmount.toFixed(2)} (${discount}%)
+      Final Amount: ₹${finalAmount.toFixed(2)}
+
+      ${msg}`;
+
+      document.getElementById("output").textContent = output;
+    }
+  </script>
+
+</body>
+</html>
